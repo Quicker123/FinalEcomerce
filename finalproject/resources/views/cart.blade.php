@@ -10,12 +10,18 @@
 	<!-- Title Tag  -->
     <title>Eshop - eCommerce HTML5 Template.</title>
 	<!-- Favicon -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<link rel="icon" type="/image/png" href="/images/favicon.png">
 	<!-- Web Font -->
 	<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 	
 	<!-- StyleSheet -->
+	{{-- Jquery --}}
 	
+	<script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery-migrate-3.0.0.js"></script>
+	<script src="/js/jquery-ui.min.js"></script>
+
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="/css/bootstrap.css">
 	<!-- Magnific Popup -->
@@ -255,32 +261,34 @@
 							</tr>
 						</thead>
 						<tbody>
+							@foreach ($orders as $order)
 							<tr>
 								<td class="image" data-title="No"><img src="https://via.placeholder.com/100x100" alt="#"></td>
 								<td class="product-des" data-title="Description">
-									<p class="product-name"><a href="#">Women Dress</a></p>
+									<p class="product-name"><a href="#">{{ $order->products_name }}</a></p>
 									<p class="product-des">Maboriosam in a tonto nesciung eget  distingy magndapibus.</p>
 								</td>
-								<td class="price" data-title="Price"><span>$110.00 </span></td>
+								<td class="price" data-title="Price"><span>${{ $order->product_price}} </span></td>
 								<td class="qty" data-title="Qty"><!-- Input Order -->
 									<div class="input-group">
 										<div class="button minus">
-											<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
+											<button type="button" class="btn btn-primary btn-number" onclick="updateCartDetail('{{$order->id}}','decrease',$('#quantity').val());" data-type="minus" data-field="quant[1]">
 												<i class="ti-minus"></i>
 											</button>
 										</div>
-										<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="1">
+										<input type="text" name="quant[1]" id="quantity" class="input-number"  onkeyup = "updateCartDetail('{{$order->id}}','admin',$('#quantity').val());" data-min="1" data-max="100" value="{{ $order->product_quantity }}">
 										<div class="button plus">
-											<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
+											<button type="button" class="btn btn-primary btn-number" onclick="updateCartDetail('{{$order->id}}','increase',$('#quantity').val());">
 												<i class="ti-plus"></i>
 											</button>
 										</div>
 									</div>
 									<!--/ End Input Order -->
 								</td>
-								<td class="total-amount" data-title="Total"><span>$220.88</span></td>
+								<td class="total-amount" id="totalPrice" data-title="Total"><span>${{ $order->product_total }}</span></td>
 								<td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
 							</tr>
+							@endforeach
 							
 						</tbody>
 					</table>
@@ -638,5 +646,24 @@
 	<script src="/js/easing.js"></script>
 	<!-- Active JS -->
 	<script src="/js/active.js"></script>
+	<script>
+			var updateCartDetail = function (id, type, count){
+			$.ajax({
+				type:"POST",
+				url:"{{ route('cart.store')}}",
+				data: {'id':id,"type":type,"count":count,"_token":"{{csrf_token()}}"},
+				dataType: 'JSON',
+				success: function(data){
+					if(data.status == 200){
+						$("#quantity").val(data.count);
+						$("#totalPrice").html(data.total);
+						console.log(data.message);
+					}else{
+						console.log("No data has been sent");
+					}
+				}
+			});
+		};
+	</script>
 </body>
 </html>

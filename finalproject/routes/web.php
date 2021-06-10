@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductsController;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +21,21 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/cart', function (){
-    return view('cart');
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
+
+Route::prefix('owner')->name('admin.')->group(function () {
+    Route::resource('products', ProductsController::class);
+    Route::resource('categories', CategoriesController::class);
+    Route::resource('dashboard', DashboardController::class);
+});
+
+Route::get('/home', function(){
+    $products = Product::all();
+    $categories = Category::all();
+    return view('home', compact(['products', 'categories']));
 });
