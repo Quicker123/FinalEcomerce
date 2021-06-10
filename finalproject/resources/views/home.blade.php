@@ -5,7 +5,7 @@
 @endsection
 @section('contents')
     	<!-- Slider Area -->
-	<section class="hero-slider">
+	<section class="hero-slider" style="margin-top: 300px">
 		<!-- Single Slider -->
 		<div class="single-slider">
 			<div class="container">

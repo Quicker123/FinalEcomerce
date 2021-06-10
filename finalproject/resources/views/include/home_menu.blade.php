@@ -6,11 +6,15 @@
                     <div class="all-category">
                         <h3 class="cat-heading"><i class="fa fa-bars" aria-hidden="true"></i>CATEGORIES</h3>
                         <ul class="main-category">
-                            @foreach ($products as $Product)
-                            <li><a href="#">New Arrivals <i class="fa fa-angle-right" aria-hidden="true"></i></a>
-                                <ul class="sub-category">
-                                    <li><a href="#">I am a bad</a></li>
-                                </ul>
+                            @foreach ($categories as $category)
+                            <li><a href="#">{{ $category->category_name }}<i class="fa fa-angle-right" aria-hidden="true"></i></a>
+                                @foreach ($subcategories as $subcategory)
+                                    @if ($subcategory->parent_category === $category->id)
+                                        <ul class="sub-category">
+                                            <li><a href="#">{{ $subcategory->category_name }}</a></li>
+                                        </ul> 
+                                    @endif
+                                @endforeach
                             </li>
                             @endforeach
                         </ul>

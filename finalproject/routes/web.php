@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\SubCategory;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,5 +38,14 @@ Route::prefix('owner')->name('admin.')->group(function () {
 Route::get('/home', function(){
     $products = Product::all();
     $categories = Category::all();
-    return view('home', compact(['products', 'categories']));
+    $subcategories = SubCategory::all();
+    return view('home', compact(['products', 'categories', 'subcategories']));
+});
+
+
+Route::get('/productdetail', function(){
+    $products = Product::all();
+    $categories = Category::all();
+    $subcategories = SubCategory::all();
+    return view('productDetail',  compact(['products', 'categories', 'subcategories']));
 });
