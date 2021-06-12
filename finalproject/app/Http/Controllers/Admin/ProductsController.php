@@ -6,8 +6,8 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
 class ProductsController extends Controller
 {
     /**
@@ -62,6 +62,7 @@ class ProductsController extends Controller
         }
         $product = new Product;
             $product->category_id = $newcategory;
+            $product->user_id = Auth::id();
             $product->subcategory_id = $subcategory;
             $product->product_name = $request->input('product_name');
             $product->product_description = $request->input('product_description');
@@ -69,7 +70,7 @@ class ProductsController extends Controller
                 $name = $request->file('image')->getClientOriginalName();
                 $newname = $this->imageUnique($name);
                 $request->file('image')->storeAs('public/images', $newname);
-                image_crop($newname, 550, 750);
+                image_crop($newname, 550, 750, 'thumbnail');
                 $product->product_image = $newname;
             }
             $product->product_discount = $request->product_discount;

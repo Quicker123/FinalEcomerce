@@ -51,6 +51,11 @@
                     {{ __('Log in') }}
                 </x-button>
             </div>
+            <div class="flex items-center justify-end mt-4">
+                <span>Don't have account.</span>
+
+                <x-button class="ml-3"><a href="/register">Register</a></x-button>
+            </div>
         </form>
     </x-auth-card>
 </x-guest-layout>

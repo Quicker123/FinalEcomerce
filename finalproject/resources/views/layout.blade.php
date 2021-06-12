@@ -9,8 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!-- Title Tag  -->
     <title>Sellers</title>
-	<link rel="stylesheet" href="/css/productdetail.scss">
-    <script src="/js/productdetail.js"></script>
 	<!-- Favicon -->
 	<link rel="icon" type="image/png" href="images/favicon.png">
 	<!-- Web Font -->
@@ -78,8 +76,18 @@
 								<ul class="list-main">
 									<li><i class="ti-location-pin"></i> Store location</li>
 									<li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
-									<li><i class="ti-user"></i> <a href="#">My account</a></li>
-									<li><i class="ti-power-off"></i><a href="login.html#">Login</a></li>
+									<li><i class="ti-user"></i> <a href="{{ route('admin.dashboard.index')}}">My account</a></li>
+									@if (Auth::id())
+									<form method="POST" action="{{ route('logout') }}">
+										@csrf
+										<li>
+											<i class="ti-power-off"></i><a href="{{ route('logout') }}" onclick="event.preventDefault();
+											this.closest('form').submit();">Logout</a>
+										</li>
+									</form>
+									@else
+									<li><i class="ti-power-off"></i><a href="{{ route('login')}}">Login</a></li>
+									@endif
 								</ul>
 							</div>
 							<!-- End Top Right -->
@@ -94,7 +102,7 @@
 						<div class="col-lg-2 col-md-2 col-12">
 							<!-- Logo -->
 							<div class="logo">
-								<a href="index.html"><img src="images/logo.png" alt="logo"></a>
+								<a href="index.html"><img src="/images/logo.png" alt="logo"></a>
 							</div>
 							<!--/ End Logo -->
 							<!-- Search Form -->
@@ -301,7 +309,7 @@
 	<!-- Bootstrap JS -->
 	<script src="/js/bootstrap.min.js"></script>
 	<!-- Color JS -->
-	<script src="/js/colors.js"></script>
+	{{-- <script src="/js/colors.js"></script> --}}
 	<!-- Slicknav JS -->
 	<script src="/js/slicknav.min.js"></script>
 	<!-- Owl Carousel JS -->

@@ -3,6 +3,11 @@
         <div class="container">
             <div class="az-content-body">
                 <h1>Create Product</h1>
+                @if (Auth::user()->user_type === "user")
+                    <div class="alert alert-danger">
+                        User cannot create product.
+                    </div>
+                @else
                 <form action="{{ route('admin.products.store')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     Product Name: <input type="text" name="product_name" class="form-control" value="{{ old('product_name') }}"
@@ -75,6 +80,7 @@
                     <br>
                     <button type="submit" class="form-control">Add Product</button>
                 </form>
+                @endif
             </div>
         </div>
     </div>

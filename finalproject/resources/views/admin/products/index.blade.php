@@ -13,21 +13,30 @@
                   <td>Action</td>
               </tr>
               @foreach ($products as $product)
+              @can('update', $product)
                 <tr>
                   <td>{{ $product->id }}</td>
                   <td> {{ $product->product_name }} </td>
                   <td> {{ substr($product->product_description, 0, 50) }} </td>
                   <td>{{ $product->product_price }}</td>
                   <td>
-                      <a href="{{ route('admin.products.edit', $product->id)}}"> Edit </a> | <form action="{{route('admin.products.destroy', ['product' => $product->id])}}" method="POSt"> 
+                    @if (Auth::user()->user_type == "user")
+                      No Action
+                    @else
+                      <a href="{{ route('admin.products.edit', $product->id)}}"> Edit </a> | 
+                      <form action="{{route('admin.products.destroy', ['product' => $product->id])}}" method="POSt"> 
                         @method('DELETE')
                         @csrf
                         <a href="#" onclick="event.preventDefault();
                         this.closest('form').submit();">
                         Delete</a>
+                      </form>
+                    @endif
                     </form>
                   </td>
                 </tr>
+              @endcan
+                
               @endforeach
           </table>
         </div>

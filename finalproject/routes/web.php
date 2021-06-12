@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductsController;
+use App\Http\Controllers\UserProductController;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\SubCategory;
@@ -28,24 +29,21 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
-
-Route::prefix('owner')->name('admin.')->group(function () {
-    Route::resource('products', ProductsController::class);
-    Route::resource('categories', CategoriesController::class);
-    Route::resource('dashboard', DashboardController::class);
-});
-
 Route::get('/home', function(){
     $products = Product::all();
     $categories = Category::all();
     $subcategories = SubCategory::all();
     return view('home', compact(['products', 'categories', 'subcategories']));
 });
-
-
-Route::get('/productdetail', function(){
-    $products = Product::all();
-    $categories = Category::all();
-    $subcategories = SubCategory::all();
-    return view('productDetail',  compact(['products', 'categories', 'subcategories']));
+Route::middleware(['auth'])->prefix('owner')->name('admin.')->group(function () {
+    Route::resource('products', ProductsController::class);
+    Route::resource('categories', CategoriesController::class);
+    Route::resource('dashboard', DashboardController::class);
 });
+
+Route::get('/productdetail/{id}', [UserProductController::class, 'index'])->name('userproduct.index');
+
+Route::post('/postComment', [UserProductController::class, 'store'])->name('userproduct.store');
+
+
+

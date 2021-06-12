@@ -5,7 +5,7 @@
 @endsection
 @section('contents')
     	<!-- Slider Area -->
-	<section class="hero-slider" style="margin-top: 300px">
+	<section class="hero-slider" >
 		<!-- Single Slider -->
 		<div class="single-slider">
 			<div class="container">
@@ -112,8 +112,7 @@
 													<div class="single-product">
 														<div class="product-img">
 															<a href="product-details.html">
-																<img class="default-img" src="{{ $product->product_image == ' ' ? 'https://via.placeholder.com/550x750': image_crop($product->product_image) }}" alt="#">
-																<img class="hover-img" src="{{ $product->product_image == ' ' ? 'https://via.placeholder.com/550x750': asset('storage/images/thumbnail/'.$product->product_image) }}" alt="#">
+																<img class="default-img" src="{{ $product->product_image == ' ' ? 'https://via.placeholder.com/550x750': image_crop($product->product_image, 550, 750, "thumbnail") }}" alt="#">
 															</a>
 															<div class="button-head">
 																<div class="product-action">
@@ -132,9 +131,9 @@
 															</div>
 														</div>
 														<div class="product-content">
-															<h3><a href="/products/{{ $product->id }}">{{ $product->product_name}}</a></h3>
+															<h3><a href="/productdetail/{{ $product->id }}">{{ $product->product_name}}</a></h3>
 															<div class="product-price">
-																<span>price: $ {{  $product->product_price }}</span>
+																<span>price: ${{  $product->product_price }}</span>
 																<a href="categories/{{ $product->category->id }}"><span>{{ $product->category->category_name}}</span></a>
 															</div>
 														</div>
@@ -1737,29 +1736,6 @@
 		</div>
 	</section>
 	<!-- End Shop Services Area -->
-	
-	<!-- Start Shop Newsletter  -->
-	<section class="shop-newsletter section">
-		<div class="container">
-			<div class="inner-top">
-				<div class="row">
-					<div class="col-lg-8 offset-lg-2 col-12">
-						<!-- Start Newsletter Inner -->
-						<div class="inner">
-							<h4>Newsletter</h4>
-							<p> Subscribe to our newsletter and get <span>10%</span> off your first purchase</p>
-							<form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
-								<input name="EMAIL" placeholder="Your email address" required="" type="email">
-								<button class="btn">Subscribe</button>
-							</form>
-						</div>
-						<!-- End Newsletter Inner -->
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- End Shop Newsletter -->
 	
 	<!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">

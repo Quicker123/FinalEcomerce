@@ -48,7 +48,7 @@ class CategoriesController extends Controller
         ]);
         $category = new Category;
         $category->category_name = $request->category_name;
-        $category->slug = $request->category_slug;
+        $category->category_description = $request->category_slug;
         $category->save();
         return redirect()->route('admin.categories.index');
     }
