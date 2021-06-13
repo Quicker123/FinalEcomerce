@@ -93,12 +93,21 @@
             <h3 class="title">Product Detail</h3>
             <ul class="categor-list">
               <li><b>Product Name: {{ $singleproduct->product_name }}</b></li>
-              <li><b> Description:</b> <pre>{{ $singleproduct->product_description}}</pre></li>
+              <li><b> Description:</b><br><p>{{ $singleproduct->product_description}}</p></li>
               <li><b> Actual Price:</b> Rs.{{ $singleproduct->product_price }}</li>
               <li><b> Discount:</b> {{$singleproduct->product_discount}}%</li>
               <li><b>Discounted Price:</b> Rs.{{ $singleproduct->product_price - ($singleproduct->product_price * ($singleproduct->product_discount / 100))}}</li>
               <li>
-                <form action="#">
+                <form action="{{ route('user.order.store') }}" method="POST">
+                  @csrf
+                  <input type="hidden" name = "product_id" value="{{ $singleproduct->id }}">
+                  <b>Quantity:</b>
+                  @error('quantity')
+                    <div class="alert alert-danger">
+                      {{ $message }}
+                    </div>
+                  @enderror
+                  <input type="text" name="quantity" class="form-control" value="1" style="width: 100px"><br>
                   <div class="form-group button rounded">
                     <button type="submit" class="btn">Add to Cart</button>
                   </div>

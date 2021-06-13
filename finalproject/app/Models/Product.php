@@ -13,4 +13,8 @@ class Product extends Model
         // hasOne, hasMany, belongsTo, belongsToMany
         return $this->belongsTo(Category::class);
     }
+
+    public function comment(){
+        return $this->hasMany(ProductComment::class);
+    }
 }

@@ -4,8 +4,12 @@ use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\UserProductController;
+use App\Http\Controllers\User\OrderController;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\SubCategory;
 use Illuminate\Support\Facades\Route;
 
@@ -29,21 +33,19 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
-Route::get('/home', function(){
-    $products = Product::all();
-    $categories = Category::all();
-    $subcategories = SubCategory::all();
-    return view('home', compact(['products', 'categories', 'subcategories']));
-});
+
 Route::middleware(['auth'])->prefix('owner')->name('admin.')->group(function () {
     Route::resource('products', ProductsController::class);
     Route::resource('categories', CategoriesController::class);
     Route::resource('dashboard', DashboardController::class);
 });
-
+Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
+    Route::resource('order', OrderController::class);
+    Route::get('/home', [OrderController::class, 'home']);
+});
 Route::get('/productdetail/{id}', [UserProductController::class, 'index'])->name('userproduct.index');
 
 Route::post('/postComment', [UserProductController::class, 'store'])->name('userproduct.store');
 
-
+Route::post('/ajaxRequest', [OrderController::class, 'ajaxRequest'])->name('user.ajax');
 

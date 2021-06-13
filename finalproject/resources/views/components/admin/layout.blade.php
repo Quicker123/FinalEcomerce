@@ -63,7 +63,7 @@
           </div><!-- az-header-menu-header -->
           <ul class="nav">
             <li class="nav-item active show">
-              <a href="index.html" class="nav-link"><i class="typcn typcn-chart-area-outline"></i> Dashboard</a>
+              <a href="/user/home" class="nav-link"><i class="typcn typcn-chart-area-outline"></i> Dashboard</a>
             </li>
             <li class="nav-item">
               <a href="" class="nav-link with-sub"><i class="typcn typcn-document"></i> Products</a>

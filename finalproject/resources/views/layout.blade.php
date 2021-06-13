@@ -60,7 +60,7 @@
 			<div class="topbar">
 				<div class="container">
 					<div class="row">
-						<div class="col-lg-4 col-md-12 col-12">
+						<div class="col-lg-4 col-md-16 col-16">
 							<!-- Top Left -->
 							<div class="top-left">
 								<ul class="list-main">
@@ -70,12 +70,10 @@
 							</div>
 							<!--/ End Top Left -->
 						</div>
-						<div class="col-lg-8 col-md-12 col-12">
+						<div class="col-lg-8 col-md-16 col-16" style="width: 1000px;">
 							<!-- Top Right -->
 							<div class="right-content">
-								<ul class="list-main">
-									<li><i class="ti-location-pin"></i> Store location</li>
-									<li><i class="ti-alarm-clock"></i> <a href="#">Daily deal</a></li>
+								<ul class="list-main row">
 									<li><i class="ti-user"></i> <a href="{{ route('admin.dashboard.index')}}">My account</a></li>
 									@if (Auth::id())
 									<form method="POST" action="{{ route('logout') }}">
@@ -146,27 +144,27 @@
 									<a href="#" class="single-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
 								</div>
 								<div class="sinlge-bar shopping">
-									<a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">1</span></a>
+									<a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">{{ count($quantity) }}</span></a>
 									<!-- Shopping Item -->
 									<div class="shopping-item">
 										<div class="dropdown-cart-header">
-											<span>2 Items</span>
-											<a href="#">View Cart</a>
+											<span>{{ count($quantity)." " }} Items</span>
+											<a href="{{ route('user.order.index') }}">View Cart</a>
 										</div>
 										<ul class="shopping-list">
-											
+										@foreach ($quantity as $item)
 											<li>
 												<a href="#" class="remove" title="Remove this item"><i class="fa fa-remove"></i></a>
-												<a class="cart-img" href="#"><img src="https://via.placeholder.com/70x70" alt="#"></a>
-												<h4><a href="#">??</a></h4>
-												<p class="quantity">2 x - <span class="amount">none</span></p>
+												<a class="cart-img" href="#"><img src="{{ image_crop($item["product_image"], 70, 70, "cart") }}" alt="#"></a>
+												<h4><a href="#">{{ $item["product_name"]}}</a></h4>
+												<p class="quantity">{{ $item["quantity"]}} x - <span class="amount">${{ $item["unitPrice"] }}</span></p>
 											</li>
-										{{-- @endforeach	 --}}
+										@endforeach	
 										</ul>
 										<div class="bottom">
 											<div class="total">
 												<span>Total</span>
-												<span class="total-amount">none</span>
+												<span class="total-amount">${{$orders === null ? "" : $orders->order_total }}</span>
 											</div>
 											<a href="checkout.html" class="btn animate">Checkout</a>
 										</div>
@@ -218,7 +216,7 @@
 						<!-- Single Widget -->
 						<div class="single-footer about">
 							<div class="logo">
-								<a href="index.html"><img src="images/logo2.png" alt="#"></a>
+								<a href="index.html"><img src="/images/logo2.png" alt="#"></a>
 							</div>
 							<p class="text">Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue,  magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus.</p>
 							<p class="call">Got Question? Call us 24/7<span><a href="tel:123456789">+0123 456 789</a></span></p>
@@ -291,7 +289,7 @@
 						</div>
 						<div class="col-lg-6 col-12">
 							<div class="right">
-								<img src="images/payments.png" alt="#">
+								<img src="/images/payments.png" alt="#">
 							</div>
 						</div>
 					</div>
@@ -332,24 +330,24 @@
 	<script src="/js/easing.js"></script>
 	<!-- Active JS -->
 	<script src="/js/active.js"></script>
-	{{-- <script>
-		$("#addCart").on("submit", function(e){
-			e.preventDefault();
-			var store = $(this).serialize();
+	<script>
+		var updateCartDetail = function(id,type,count){	
 			$.ajax({
 				type:"POST",
-				url: "{{ route('cart.store') }}",
-				data: store,
+				url: "{{ route('user.ajax') }}",
+				data: {'id':id,"type":type,"count":count,"_token":"{{csrf_token()}}"},
 				dataType: 'JSON',
-				success: function(data1){
-					if(data1.status == 200){
-						console.log(data1.message);
+				success: function(data){
+					if(data.status == 200){
+						$("#"+ id).val(data.count);
+						$("#totalPrice"+ id).html("$"+ (data.total));
+						console.log(data.message);
 					}else{
 						console.log("No data has been sent");
 					}
 				}
 			});
-		});
-	</script> --}}
+		};
+	</script>
 </body>
 </html>

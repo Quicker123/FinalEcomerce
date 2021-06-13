@@ -15,7 +15,7 @@ class UserProductController extends Controller
         $singleproduct = Product::find($id);
         $categories = Category::all();
         $subcategories = SubCategory::all();
-        $productComments = ProductComment::all();
+        $productComments = $singleproduct->comment;
         return view('productDetail',  compact(['products', 'categories', 'subcategories', 'singleproduct', 'productComments']));
     }
     public function store (Request $request){
@@ -24,10 +24,12 @@ class UserProductController extends Controller
         $email = $request->visitor_email;
         $message = $request->visitor_message;
 
+
         $productComment = new ProductComment;
         $productComment->name = $name;
         $productComment->email = $email;
         $productComment->message = $message;
+        $productComment->product_id = $product_id;
         $productComment->save();
 
         return redirect()->route('userproduct.index', ['id'=>$product_id]);
