@@ -147,25 +147,39 @@ class OrderController extends Controller
             $type = $request->type;
             $order = Order::select('id')->where('order_user_id', Auth::id())->latest()->first();
             $orderItem = OrderItem::where('product_id', $product_id)->where('order_id', $order->id)->latest()->first();
-            if($type = 'increase'){
+
+            if($quantity <= 1 && $type == 'decrease'){
+                return;
+            }else{
+                return $this->ajaxFunctionality($type, $quantity, $orderItem);
+            }
+    }
+
+    public function ajaxFunctionality($type, $quantity, $orderItem){
+        switch($type){
+            case "increase": 
                 $orderItem->product_quantity = $quantity + 1;
                 $orderItem->save();
-            }elseif($type = 'decrease'){
+                break;
+            case "decrease":
                 $orderItem->product_quantity = $quantity - 1;
                 $orderItem->save();
-            }
-            $finalQuantity = $orderItem->product_quantity;
-            $orderItem->product_total_price = $finalQuantity * $orderItem->product_price;
-            $orderItem->save();
-    
-            $totalAmount = $orderItem->product_total_price;
+                break;
+            default: 
+                return;
+        }
+        $finalQuantity = $orderItem->product_quantity;
+        $orderItem->product_total_price = $finalQuantity * $orderItem->product_price;
+        $orderItem->save();
 
-            return response()->JSON([
-                'message'=>'cart updated',
-                'status' => 200,
-                'count'  => $finalQuantity, 
-                'total'  => $totalAmount,
-            ]);
+        $totalAmount = $orderItem->product_total_price;
+
+        return response()->JSON([
+            'message'=>'cart updated',
+            'status' => 200,
+            'count'  => $finalQuantity, 
+            'total'  => $totalAmount,
+        ]);
     }
 
     /**

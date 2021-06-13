@@ -164,7 +164,7 @@
 										<div class="bottom">
 											<div class="total">
 												<span>Total</span>
-												<span class="total-amount">${{$orders === null ? "" : $orders->order_total }}</span>
+												<span class="total-amount">$""</span>
 											</div>
 											<a href="checkout.html" class="btn animate">Checkout</a>
 										</div>

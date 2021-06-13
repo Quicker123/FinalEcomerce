@@ -36,7 +36,7 @@
 													<i class="ti-minus"></i>
 												</button>
 											</div>
-											<input type="text" name="product.{{ $item["product_id"] }}" id = "{{ $item["product_id"] }}" class="input-number"  data-min="1" data-max="100" value="{{ $item['quantity']}}">
+											<input type="text" name="product.{{ $item["product_id"] }}" id = "{{ $item["product_id"] }}" class="input-number" value="{{ $item['quantity']}}">
 											<div class="button plus">
 												<button type="button" class="btn btn-primary btn-number" onclick="updateCartDetail('{{$item['product_id']}}','increase',$('#{{ $item["product_id"] }}').val());" data-type="plus" data-field="quant[1]">
 													<i class="ti-plus"></i>
