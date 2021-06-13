@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductsController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserProductController;
 use App\Http\Controllers\User\OrderController;
 use App\Models\Category;
@@ -42,6 +43,10 @@ Route::middleware(['auth'])->prefix('owner')->name('admin.')->group(function () 
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::resource('order', OrderController::class);
     Route::get('/home', [OrderController::class, 'home']);
+    Route::get('/checkout', [OrderController::class, 'checkout']);
+    Route::post('/transaction', [TransactionController::class, 'store']);
+    Route::get('/removeItem/{id}', [TransactionController::class, 'destroy']);
+    Route::post('/paymentVerify', [TransactionController::class, 'khaltiPay']);
 });
 Route::get('/productdetail/{id}', [UserProductController::class, 'index'])->name('userproduct.index');
 
@@ -49,3 +54,4 @@ Route::post('/postComment', [UserProductController::class, 'store'])->name('user
 
 Route::post('/ajaxRequest', [OrderController::class, 'ajaxRequest'])->name('user.ajax');
 
+Route::get('/orderChanger', [OrderController::class, 'orderChanger'])->name('user.orderChanger');

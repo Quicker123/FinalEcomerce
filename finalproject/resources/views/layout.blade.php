@@ -10,6 +10,8 @@
 	<!-- Title Tag  -->
     <title>Sellers</title>
 	<!-- Favicon -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://khalti.com/static/khalti-checkout.js"></script>
 	<link rel="icon" type="image/png" href="images/favicon.png">
 	<!-- Web Font -->
 	<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
@@ -142,34 +144,6 @@
 								</div>
 								<div class="sinlge-bar">
 									<a href="#" class="single-icon"><i class="fa fa-user-circle-o" aria-hidden="true"></i></a>
-								</div>
-								<div class="sinlge-bar shopping">
-									<a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">{{ count($quantity) }}</span></a>
-									<!-- Shopping Item -->
-									<div class="shopping-item">
-										<div class="dropdown-cart-header">
-											<span>{{ count($quantity)." " }} Items</span>
-											<a href="{{ route('user.order.index') }}">View Cart</a>
-										</div>
-										<ul class="shopping-list">
-										@foreach ($quantity as $item)
-											<li>
-												<a href="#" class="remove" title="Remove this item"><i class="fa fa-remove"></i></a>
-												<a class="cart-img" href="#"><img src="{{ image_crop($item["product_image"], 70, 70, "cart") }}" alt="#"></a>
-												<h4><a href="#">{{ $item["product_name"]}}</a></h4>
-												<p class="quantity">{{ $item["quantity"]}} x - <span class="amount">${{ $item["unitPrice"] }}</span></p>
-											</li>
-										@endforeach	
-										</ul>
-										<div class="bottom">
-											<div class="total">
-												<span>Total</span>
-												<span class="total-amount">$""</span>
-											</div>
-											<a href="checkout.html" class="btn animate">Checkout</a>
-										</div>
-									</div>
-									<!--/ End Shopping Item -->
 								</div>
 							</div>
 						</div>
@@ -341,6 +315,8 @@
 					if(data.status == 200){
 						$("#"+ id).val(data.count);
 						$("#totalPrice"+ id).html("$"+ (data.total));
+						$("#payment").html("$" + data.payment);
+						$("#totalPayment").html("$"+ data.totalPayment);
 						console.log(data.message);
 					}else{
 						console.log("No data has been sent");
@@ -349,5 +325,48 @@
 			});
 		};
 	</script>
+	<script>
+        var config = {
+            "publicKey": "test_public_key_06aacf3772e14f7aaefe96388a87acca",
+            "productIdentity": "Testing",
+            "productName": "Testing",
+            "productUrl": "http://localhost/test",
+            "eventHandler": {
+                onSuccess (payload) {
+                    $.ajax({
+
+                        url: "{{url('/user/paymentVerify')}}",
+                        type: 'POST',
+                        data:{
+                            amount : payload.amount,
+                            trans_token : payload.token,
+                            _token:'{{csrf_token()}}'
+                        },
+                        success: function(res)
+                        {
+                            $('#successMessage').html(res.responsedArray.amount);
+                            console.log(res);
+                        },
+                        error: function(error)
+                        {
+                            console.log(error.error);
+                        }
+                    })
+                },
+                onError (error) {
+                    console.log(error);
+                },
+                onClose () {
+                    console.log('widget is closing');
+                }
+            }
+        };
+
+        var checkout = new KhaltiCheckout(config);
+        var btn = document.getElementById("khalti-pay");
+        btn.onclick = function () {
+            checkout.show({amount: {{ ($orders->order_total + $orders->shipping_price) * 100}}});
+        }
+    </script>
 </body>
 </html>

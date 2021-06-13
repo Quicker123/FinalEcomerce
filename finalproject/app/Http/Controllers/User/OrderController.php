@@ -53,7 +53,7 @@ class OrderController extends Controller
             $product_id = $item->product_id;
             $product_image = $product->product_image;
             $a1 = ["product_name"=>$product_name, "product_description"=>$product_description, "product_id"=>$product_id,
-                    "quantity" => $product_quantity, "unitPrice"=>$unitPrice, "product_image"=> $product_image];
+                    "quantity" => $product_quantity, "unitPrice"=>$unitPrice, "product_image"=> $product_image, "item"=>$item->id];
             array_push($quantity, $a1);
         }
         return $quantity;
@@ -174,14 +174,24 @@ class OrderController extends Controller
 
         $totalAmount = $orderItem->product_total_price;
 
+        $checker = Order::where('order_user_id', Auth::id())->latest()->first(); 
+        $holder = $checker::withSum('items', 'product_total_price')->where('order_user_id' , Auth::id())->latest()->first();
+        $checker->order_total = $holder->items_sum_product_total_price;
+        $checker->save();
+
+        $payment = $holder->items_sum_product_total_price;
+
+        $totalPayment = $payment + $holder->shipping_price;
+
         return response()->JSON([
             'message'=>'cart updated',
             'status' => 200,
             'count'  => $finalQuantity, 
             'total'  => $totalAmount,
+            'totalPayment' => $totalPayment,
+            'payment'=>$totalPayment,
         ]);
     }
-
     /**
      * Display the specified resource.
      *
@@ -191,6 +201,14 @@ class OrderController extends Controller
     public function show($id)
     {
         //
+    }
+    public function checkout(){
+        $products = Product::all();
+        $categories = Category::all();
+        $subcategories = SubCategory::all();
+        $orders = Order::where('order_user_id', Auth::id())->latest()->first();
+        $quantity = [];
+        return view('checkout', compact(['products', 'categories', 'subcategories', 'quantity', 'orders']));
     }
 
     /**

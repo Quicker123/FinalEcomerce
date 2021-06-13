@@ -32,13 +32,13 @@
 									<td class="qty" data-title="Qty"><!-- Input Order -->
 										<div class="input-group">
 											<div class="button minus">
-												<button type="button" class="btn btn-primary btn-number"  data-type="minus" onclick="updateCartDetail('{{$item['product_id']}}','decrease',$('#{{ $item["product_id"] }}').val());" data-field="quant[1]">
+												<button type="button" data-type="minus" onclick="updateCartDetail('{{$item['product_id']}}','decrease',$('#{{ $item["product_id"] }}').val());" data-field="quant[1]">
 													<i class="ti-minus"></i>
 												</button>
 											</div>
 											<input type="text" name="product.{{ $item["product_id"] }}" id = "{{ $item["product_id"] }}" class="input-number" value="{{ $item['quantity']}}">
 											<div class="button plus">
-												<button type="button" class="btn btn-primary btn-number" onclick="updateCartDetail('{{$item['product_id']}}','increase',$('#{{ $item["product_id"] }}').val());" data-type="plus" data-field="quant[1]">
+												<button type="button" onclick="updateCartDetail('{{$item['product_id']}}','increase',$('#{{ $item["product_id"] }}').val());" data-type="plus" data-field="quant[1]">
 													<i class="ti-plus"></i>
 												</button>
 											</div>
@@ -46,7 +46,7 @@
 										<!--/ End Input Order -->
 									</td>
 									<td class="total-amount" id = "totalPrice{{ $item['product_id']}}" data-title="Total"><span>${{ $item["quantity"] * $item["unitPrice"]}}</span></td>
-									<td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
+									<td class="action" data-title="Remove"><a href="/user/removeItem/{{ $item["item"]}}"><i class="ti-trash remove-icon"></i></a></td>
 								</tr>								
 							@endforeach
 							
@@ -69,14 +69,12 @@
 							<div class="col-lg-4 col-md-7 col-12" style="margin-top: 20px">
 								<div class="right">
 									<ul>
-										
-											<li>Cart Subtotal<span>${{ $orders->order_total}}</span></li>
-											<li>Shipping<span>${{ $orders->shipping_price }}</span></li>
-											<li class="last">You Pay<span>${{ $orders->order_total + $orders->shipping_price }}</span></li>								
+										<li>Cart Subtotal<span id="payment">${{ $orders->order_total}}</span></li>
+										<li>Shipping<span>${{ $orders->shipping_price }}</span></li>
+										<li class="last" >You Pay<span id="totalPayment">${{ $orders->order_total + $orders->shipping_price }}</span></li>								
 									</ul>
 									<div class="button5">
-										<a href="#" class="btn">Checkout</a>
-										<a href="#" class="btn">Continue shopping</a>
+										<a href="/user/checkout" class="btn">Checkout</a>
 									</div>
 								</div>
 							</div>
